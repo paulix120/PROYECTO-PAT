@@ -1,0 +1,152 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background: linear-gradient(135deg,#0077B6, #48aad1,#56925c);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+}
+
+.contenedor{
+    width:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+   
+}
+
+.tarjeta{
+
+    width:420px;
+    background:#fff;
+    padding:40px;
+    border-radius:10px;
+    text-align:center;
+    box-shadow: 0px 10px 25px rgb(0, 0, 0);
+   
+}
+
+.icono{
+
+    width:80px;
+    height:80px;
+    margin:auto;
+    margin-bottom:20px;
+    border-radius:50%;
+    background:#eaf2ff00;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    font-size:40px;
+
+}
+
+h1{
+
+    color:#000000;
+    margin-bottom:15px;
+
+}
+
+p{
+
+    color:#3a3d42;
+
+    margin-bottom:30px;
+
+    line-height:24px;
+
+}
+
+.campo{
+
+    display:flex;
+    flex-direction:column;
+    text-align:left;
+    margin-bottom:25px;
+
+}
+
+label{
+
+    margin-bottom:8px;
+    font-weight:bold;
+    color:#374151;
+
+}
+
+input{
+
+    padding:13px;
+    border:1px solid #d1d5db;
+    border-radius:8px;
+    outline:none;
+    font-size:15px;
+    box-shadow: 0px 5px 10px #48aad1 ;
+
+}
+
+input:focus{
+
+    border-color:#48D1CC;
+    box-shadow: 0px 5px 10px #48aad1 ;
+
+}
+
+.btn-enviar{
+
+    width:100%;
+
+    padding:14px;
+
+    background:#48aad1;
+
+    color:white;
+
+    border:none;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+    font-size:16px;
+
+    transition:.3s;
+
+}
+
+.btn-enviar:hover{
+
+    background:#1d4ed8;
+
+}
+
+.volver{
+
+    margin-top:25px;
+
+}
+
+.volver a{
+
+    text-decoration:none;
+
+    color:#2563eb;
+
+    font-weight:bold;
+
+}
+
+.volver a:hover{
+
+    text-decoration:underline;
+
+}

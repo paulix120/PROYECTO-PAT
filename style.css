@@ -1,0 +1,115 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    background: linear-gradient(
+        135deg,
+        #0077B6,
+        #48aad1,
+        #56925c
+    );
+}
+
+.contenedor{
+    width:90%;
+    height:550px;
+    background:white;
+    border-radius:10px;
+    overflow:hidden;
+    display:flex;
+    box-shadow:10 10px 30px rgba(255, 255, 255, 0.2);
+}
+
+.login{
+    width: 60%;
+    padding:10px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
+
+.login h1{
+    color:#000000;
+    margin-bottom:10px;
+}
+
+.login p{
+    color:#777;
+    margin-bottom:15px;
+}
+ 
+label{
+    margin-top:10px;
+    margin-bottom:5px;
+  
+}
+
+.correo{
+    background-color: rgb(255, 255, 255);
+    box-shadow: 10px 10px 10px rgba(117, 19, 85, 0.1);
+}
+
+.contraseña{
+    background-color: rgb(255, 255, 255);
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.1);
+}
+
+.campo{
+
+    display:flex;
+    flex-direction:column;
+    text-align:left;
+    margin-bottom:25px;
+
+}
+
+input{
+    width:100%;
+    padding:12px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    margin-bottom:15px;
+}
+
+a{
+    text-decoration:none;
+    color:#0077B6;
+    margin-bottom:20px;
+}
+
+button{
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    background: linear-gradient(
+        135deg,
+        #00B4D8,
+        #43A047
+    );
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+}
+
+button:hover{
+    opacity:0.9;
+}
+
+.imagen{
+    width:50%;
+}
+
+.imagen img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
