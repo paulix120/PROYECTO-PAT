@@ -1,3 +1,13 @@
+# Script de Base de Datos - PAT (pat_db)
+
+Copia y pega el siguiente bloque de código directamente en MySQL Workbench, phpMyAdmin o la consola de MySQL para inicializar la base de datos completa.
+
+```sql
+-- ========================================================
+-- CREACIÓN Y CONFIGURACIÓN INICIAL DE LA BASE DE DATOS
+-- ========================================================
+
+DROP DATABASE IF EXISTS pat_db;
 CREATE DATABASE pat_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE pat_db;
 
@@ -25,15 +35,6 @@ CREATE TABLE usuarios (
     FOREIGN KEY (rol_id) REFERENCES roles(id)
 );
 
-select * from usuarios;
-DELETE FROM usuarios WHERE id = 4;
-
-INSERT INTO roles (nombre, descripcion) VALUES
-('usuario', 'Usuario regular'),
-('administrador', 'Administrador del sistema'),
-('proveedor', 'Proveedor de servicios'),
-('guia', 'Guía turístico');
-
 -- =========================
 -- UBICACIÓN Y CLASIFICACIÓN
 -- =========================
@@ -50,12 +51,6 @@ CREATE TABLE departamentos (
     nombre VARCHAR(100) NOT NULL UNIQUE,
     codigo VARCHAR(10) UNIQUE
 );
-INSERT INTO departamentos (nombre, codigo)
-VALUES ('Cundinamarca', '25');
-INSERT INTO departamentos (nombre, codigo)
-VALUES ('Bolivar', '13');
-
-select * from departamentos; 
 
 CREATE TABLE ciudades (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -65,20 +60,9 @@ CREATE TABLE ciudades (
     longitud DECIMAL(11,8),
     FOREIGN KEY (departamento_id) REFERENCES departamentos(id)
 );
-INSERT INTO ciudades (nombre, departamento_id, latitud, longitud)
-VALUES
-('Bogotá', 1, 4.71100000, -74.07210000);
-INSERT INTO ciudades (nombre, departamento_id, latitud, longitud)
-VALUES
-('chia', 1, 4.86130000, -74.06020000);
 
-INSERT INTO ciudades (nombre, departamento_id, latitud, longitud)
-VALUES
-('Cartagena', 2, 0, 0);
-
-select * from ciudades;
 -- =========================
--- DESTINOS
+-- DESTINOS Y SERVICIOS
 -- =========================
 
 CREATE TABLE destinos_turisticos (
@@ -100,10 +84,6 @@ CREATE TABLE destinos_turisticos (
     FOREIGN KEY (tipo_turismo_id) REFERENCES tipos_turismo(id)
 );
 
--- =========================
--- SERVICIOS TURÍSTICOS
--- =========================
-
 CREATE TABLE hospedajes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(150) NOT NULL,
@@ -111,25 +91,17 @@ CREATE TABLE hospedajes (
     tipo ENUM('hotel','hostal','cabaña','apartamento','camping','otro') DEFAULT 'hotel',
     destino_id INT NOT NULL,
     direccion VARCHAR(255),
-    
     precio_noche DECIMAL(10,2) NOT NULL,
--- se puede modificar: 
--- 1. precio por tipo de habitacion
-
+    pagina_oficial VARCHAR(500) NULL,
     estrellas TINYINT,
     telefono VARCHAR(20),
     imagen_principal VARCHAR(255),
     activo BOOLEAN DEFAULT TRUE,
+    latitud DECIMAL(10,8) NULL,
+    longitud DECIMAL(11,8) NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (destino_id) REFERENCES destinos_turisticos(id)
 );
-ALTER TABLE hospedajes
-ADD COLUMN latitud DECIMAL(10,8) NULL,
-ADD COLUMN longitud DECIMAL(11,8) NULL;
-ALTER TABLE hospedajes
-ADD COLUMN pagina_oficial VARCHAR(500) NULL
-AFTER precio_noche;
-
 
 CREATE TABLE restaurantes (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -138,176 +110,87 @@ CREATE TABLE restaurantes (
     tipo_cocina VARCHAR(100),
     destino_id INT NOT NULL,
     direccion VARCHAR(255),
-    
     precio_promedio DECIMAL(10,2),
--- precio por revisar
-    
+    pagina_oficial VARCHAR(500) NULL,
     horario VARCHAR(255),
+    imagen_principal VARCHAR(255) NULL,
     telefono VARCHAR(20),
     activo BOOLEAN DEFAULT TRUE,
+    latitud DECIMAL(10,8) NULL,
+    longitud DECIMAL(11,8) NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (destino_id) REFERENCES destinos_turisticos(id)
 );
-ALTER TABLE restaurantes
-ADD COLUMN pagina_oficial VARCHAR(500) NULL AFTER precio_promedio,
-ADD COLUMN imagen_principal VARCHAR(255) NULL AFTER horario,
-ADD COLUMN latitud DECIMAL(10,8) NULL AFTER activo,
-ADD COLUMN longitud DECIMAL(11,8) NULL AFTER latitud;
 
 CREATE TABLE actividades (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(150) NOT NULL,
     descripcion TEXT,
     destino_id INT NOT NULL,
+    direccion VARCHAR(255) NULL,
     precio DECIMAL(10,2) DEFAULT 0.00,
+    pagina_oficial VARCHAR(500) NULL,
+    telefono VARCHAR(30) NULL,
+    imagen_principal VARCHAR(255) NULL,
     duracion_horas DECIMAL(5,2),
     dificultad ENUM('facil','moderado','dificil') DEFAULT 'facil',
     activa BOOLEAN DEFAULT TRUE,
+    latitud DECIMAL(10,8) NULL,
+    longitud DECIMAL(11,8) NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (destino_id) REFERENCES destinos_turisticos(id)
 );
-ALTER TABLE actividades
-ADD COLUMN direccion VARCHAR(255) NULL AFTER destino_id,
-ADD COLUMN pagina_oficial VARCHAR(500) NULL AFTER precio,
-ADD COLUMN telefono VARCHAR(30) NULL AFTER pagina_oficial,
-ADD COLUMN imagen_principal VARCHAR(255) NULL AFTER telefono,
-ADD COLUMN latitud DECIMAL(10,8) NULL AFTER activa,
-ADD COLUMN longitud DECIMAL(11,8) NULL AFTER latitud;
 
 -- =========================
 -- TRANSPORTE
 -- =========================
-DROP TABLE medios_transporte;
+
 CREATE TABLE medios_transporte (
     id INT AUTO_INCREMENT PRIMARY KEY,
     usuario_id INT NULL,
     nombre VARCHAR(100) NOT NULL,
-    velocidad_kmh DECIMAL(10,2) NOT NULL DEFAULT 60,
+    velocidad_kmh DECIMAL(10,2) NOT NULL DEFAULT 60.00,
     costo_por_km DECIMAL(10,2) NOT NULL,
     icono VARCHAR(255),
-    activo BOOLEAN DEFAULT TRUE,
+    activo BOOLEAN NOT NULL DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_transporte_usuario
         FOREIGN KEY (usuario_id)
         REFERENCES usuarios(id)
         ON DELETE CASCADE
 );
-ALTER TABLE medios_transporte
-ADD activo BOOLEAN NOT NULL DEFAULT TRUE;
-ALTER TABLE medios_transporte
-ADD COLUMN usuario_id INT NULL AFTER id;
-ALTER TABLE medios_transporte
-ADD CONSTRAINT fk_transporte_usuario
-FOREIGN KEY (usuario_id)
-REFERENCES usuarios(id)
-ON DELETE CASCADE;
+
 -- =========================
--- PLANES DE VIAJE (MEJORADO)
+-- PLANES DE VIAJE Y ACTIVIDADES
 -- =========================
 
 CREATE TABLE planes_viaje (
     id INT AUTO_INCREMENT PRIMARY KEY,
     usuario_id INT NOT NULL,
-    nombre VARCHAR(150) NOT NULL,
-
+    nombre_viaje VARCHAR(150) NOT NULL,
     origen VARCHAR(255) NOT NULL,
     latitud_origen DECIMAL(10,8),
     longitud_origen DECIMAL(11,8),
-
     destino_id INT NOT NULL,
-    hospedaje_id INT,  
-
-    medio_transporte_id INT,
-    fecha_salida DATE,
-    fecha_regreso DATE,
+    medio_transporte_id INT NOT NULL,
+    fecha_inicio DATE,
+    fecha_fin DATE,
+    presupuesto DECIMAL(12,2) NULL,
+    estado ENUM('planificado', 'en_progreso', 'finalizado', 'cancelado') DEFAULT 'planificado',
     num_personas INT DEFAULT 1,
-
     distancia_km DECIMAL(10,2),
     tiempo_horas DECIMAL(6,2),
-
     costo_transporte DECIMAL(10,2),
-    costo_hospedaje DECIMAL(10,2),
-    costo_total_estimado DECIMAL(10,2),
-
     notas TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
     FOREIGN KEY (destino_id) REFERENCES destinos_turisticos(id),
-    FOREIGN KEY (medio_transporte_id) REFERENCES medios_transporte(id),
-    FOREIGN KEY (hospedaje_id) REFERENCES hospedajes(id)  -- ✅ RELACIÓN AGREGADA
+    FOREIGN KEY (medio_transporte_id) REFERENCES medios_transporte(id)
 );
-
-ALTER TABLE planes_viaje
-DROP FOREIGN KEY planes_viaje_ibfk_4;
-ALTER TABLE planes_viaje
-DROP INDEX hospedaje_id;
-ALTER TABLE planes_viaje
-DROP COLUMN hospedaje_id,
-DROP COLUMN costo_hospedaje,
-DROP COLUMN costo_total_estimado;
-ALTER TABLE planes_viaje
-CHANGE nombre nombre_viaje VARCHAR(150) NOT NULL,
-CHANGE fecha_salida fecha_inicio DATE,
-CHANGE fecha_regreso fecha_fin DATE;
-ALTER TABLE planes_viaje
-ADD COLUMN presupuesto DECIMAL(12,2) NULL
-AFTER fecha_fin,
-ADD COLUMN estado ENUM(
-'planificado',
-'en_progreso',
-'finalizado',
-'cancelado'
-)
-DEFAULT 'planificado'
-AFTER presupuesto;
-ALTER TABLE planes_viaje
-MODIFY medio_transporte_id INT NOT NULL;
-
--- =========================
--- ACTIVIDADES DEL PLAN (NUEVA TABLA)
--- =========================
 
 CREATE TABLE plan_actividades (
     id INT AUTO_INCREMENT PRIMARY KEY,
     plan_id INT NOT NULL,
     actividad_id INT NOT NULL,
     FOREIGN KEY (plan_id) REFERENCES planes_viaje(id),
-    FOREIGN KEY (actividad_id) REFERENCES actividades(id)
-);
-
--- =========================
--- RESEÑAS
--- =========================
-
-CREATE TABLE resenas (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    usuario_id INT NOT NULL,
-    destino_id INT NOT NULL,
-    calificacion TINYINT NOT NULL,
-    comentario TEXT,
-    activa BOOLEAN DEFAULT TRUE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
-    FOREIGN KEY (destino_id) REFERENCES destinos_turisticos(id),
-    UNIQUE KEY una_resena_por_usuario (usuario_id, destino_id)
-);
-
--- =========================
--- DATOS INICIALES
--- =========================
-
-INSERT INTO tipos_turismo (nombre, icono) VALUES
-('Naturaleza', '🌿'),
-('Urbano', '🏙️'),
-('Cultural', '🏛️'),
-('Gastronómico', '🍽️'),
-('Aventura', '🧗');
-
-INSERT INTO medios_transporte (nombre, velocidad_kmh, costo_por_km, icono) VALUES
-('Carro propio', 80, 400, '🚗'),
-('Moto', 70, 200, '🏍️'),
-('Bus intermunicipal', 65, 180, '🚌'),
-('Avión', 800, 1200, '✈️');
-
-select * from medios_transporte;
+    FOREIGN KEY
