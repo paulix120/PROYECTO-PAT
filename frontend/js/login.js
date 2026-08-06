@@ -49,7 +49,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
                 // Si es Administrador
                 window.location.href = 'menu_admin.html';
             } else {
-                // Si es Usuario común / Turista (Rol 1)
+                // Si es Usuario común / Usuario regular (Rol 1)
                 window.location.href = 'menu_usuario.html';
             }
 

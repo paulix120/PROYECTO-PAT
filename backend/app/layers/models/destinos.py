@@ -9,6 +9,14 @@ class Departamento(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     nombre: str
 
+class DepartamentoCreate(SQLModel):
+    nombre: str
+
+
+class DepartamentoResponse(SQLModel):
+    id: int
+    nombre: str
+
 class Ciudad(SQLModel, table=True):
     __tablename__ = "ciudades"
 
@@ -16,10 +24,30 @@ class Ciudad(SQLModel, table=True):
     nombre: str
     departamento_id: int = Field(foreign_key="departamentos.id")
 
+class CiudadCreate(SQLModel):
+    nombre: str
+    departamento_id: int
+
+
+class CiudadResponse(SQLModel):
+    id: int
+    nombre: str
+    departamento_id: int
+
 class TipoTurismo(SQLModel, table=True):
     __tablename__ = "tipos_turismo"
 
     id: Optional[int] = Field(default=None, primary_key=True)
+    nombre: str
+    descripcion: Optional[str] = None
+
+class TipoTurismoCreate(SQLModel):
+    nombre: str
+    descripcion: Optional[str] = None
+
+
+class TipoTurismoResponse(SQLModel):
+    id: int
     nombre: str
     descripcion: Optional[str] = None
 

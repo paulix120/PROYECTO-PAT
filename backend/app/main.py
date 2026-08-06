@@ -4,7 +4,16 @@ from sqlmodel import SQLModel
 from app.db.session import engine
 
 # Importamos todos los routers
-from app.layers.routers import auth, destinos, ubicaciones, transporte
+from app.layers.routers import (
+    auth,
+    destinos,
+    ubicaciones,
+    transporte,
+    hospedajes,
+    restaurantes,
+    actividades,
+    plan_viaje
+)
 
 app = FastAPI(title="PAT API")
 
@@ -24,8 +33,14 @@ def on_startup():
 app.include_router(auth.router)
 app.include_router(destinos.router)
 app.include_router(ubicaciones.router)
-app.include_router(transporte.router) # <--- Agregamos el router de ubicaciones
+app.include_router(transporte.router) 
+app.include_router(hospedajes.router)
+app.include_router(restaurantes.router)
+app.include_router(actividades.router)
+app.include_router(plan_viaje.router)
 
 @app.get("/")
 def root():
     return {"mensaje": "API del proyecto PAT funcionando correctamente."}
+
+    

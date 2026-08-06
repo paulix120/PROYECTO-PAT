@@ -1,21 +1,42 @@
 from typing import Optional
+from datetime import datetime
 from sqlmodel import SQLModel, Field
 
+
 class MedioTransporteBase(SQLModel):
-    nombre: str  # Ej: 'Carro propio', 'Moto', 'Bus intermunicipal'
-    velocidad_kmh: float = 60.0  # Velocidad promedio para calcular tiempos
-    costo_por_km: float  # Variable CLAVE para el presupuesto (Ej: 400.0)
-    icono: Optional[str] = None  # Emoji o clase CSS para el frontend futuro
+    nombre: str = Field(index=True, max_length=100)
+    velocidad_kmh: float = Field(default=60.0)
+    costo_por_km: float
+    icono: Optional[str] = None
+
 
 class MedioTransporte(MedioTransporteBase, table=True):
     __tablename__ = "medios_transporte"
-    
+
     id: Optional[int] = Field(default=None, primary_key=True)
+
+    usuario_id: Optional[int] = Field(
+        default=None,
+        foreign_key="usuarios.id"
+    )
+
     activo: bool = Field(default=True)
+
+
 
 class MedioTransporteCreate(MedioTransporteBase):
     pass
 
+
+class MedioTransporteUpdate(SQLModel):
+    nombre: Optional[str] = None
+    velocidad_kmh: Optional[float] = None
+    costo_por_km: Optional[float] = None
+    icono: Optional[str] = None
+    activo: Optional[bool] = None
+
+
 class MedioTransporteResponse(MedioTransporteBase):
     id: int
+    usuario_id: Optional[int]
     activo: bool
