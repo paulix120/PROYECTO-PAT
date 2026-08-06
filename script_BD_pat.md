@@ -193,4 +193,54 @@ CREATE TABLE plan_actividades (
     plan_id INT NOT NULL,
     actividad_id INT NOT NULL,
     FOREIGN KEY (plan_id) REFERENCES planes_viaje(id),
-    FOREIGN KEY
+    FOREIGN KEY (actividad_id) REFERENCES actividades(id)
+);
+
+-- =========================
+-- RESEÑAS
+-- =========================
+
+CREATE TABLE resenas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT NOT NULL,
+    destino_id INT NOT NULL,
+    calificacion TINYINT NOT NULL,
+    comentario TEXT,
+    activa BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
+    FOREIGN KEY (destino_id) REFERENCES destinos_turisticos(id),
+    UNIQUE KEY una_resena_por_usuario (usuario_id, destino_id)
+);
+
+-- =========================
+-- DATOS INICIALES (SEEDS)
+-- =========================
+
+INSERT INTO roles (nombre, descripcion) VALUES
+('usuario', 'Usuario regular'),
+('administrador', 'Administrador del sistema'),
+('proveedor', 'Proveedor de servicios'),
+('guia', 'Guía turístico');
+
+INSERT INTO departamentos (nombre, codigo) VALUES 
+('Cundinamarca', '25'),
+('Bolivar', '13');
+
+INSERT INTO ciudades (nombre, departamento_id, latitud, longitud) VALUES
+('Bogotá', 1, 4.71100000, -74.07210000),
+('chia', 1, 4.86130000, -74.06020000),
+('Cartagena', 2, 10.39972000, -75.51444000);
+
+INSERT INTO tipos_turismo (nombre, icono) VALUES
+('Naturaleza', '🌿'),
+('Urbano', '🏙️'),
+('Cultural', '🏛️'),
+('Gastronómico', '🍽️'),
+('Aventura', '🧗');
+
+INSERT INTO medios_transporte (nombre, velocidad_kmh, costo_por_km, icono) VALUES
+('Carro propio', 80.00, 400.00, '🚗'),
+('Moto', 70.00, 200.00, '🏍️'),
+('Bus intermunicipal', 65.00, 180.00, '🚌'),
+('Avión', 800.00, 1200.00, '✈️');
