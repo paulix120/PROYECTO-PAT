@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solicitud de Vinculación de Proveedor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./css/style_SP.css">
+<link rel="icon" type="image/png" href="./img/Designer_icon.png">
+</head>
+<body>
+
+<div class="logo">
+    <a href="./index.html">
+        <img src="./img/pat_logo_ofii_traspa.png" alt="Logo PAT">
+    </a>
+</div>
+
+<form class="ticket" id="vendorForm">
+  <div class="header">
+    <div class="eyebrow">
+      <span>Formulario de solicitud PAT</span>
+      <span id="ticketNumber">NU-00001</span>
+    </div>
+    <h1>Solicitud de Registro de Proveedor</h1>
+    <p>Completa tus datos para vincularte como proveedor de servicios turísticos. Revisaremos tu información y te contactaremos en un plazo de 3 a 5 días hábiles.</p>
+  </div>
+  <div class="perforation"></div>
+
+  <div class="body">
+
+    <fieldset>
+      <legend>Datos de la empresa</legend>
+      <div class="grid">
+        <div>
+          <label for="nit">NIT <span class="hint">con dígito de verificación</span></label>
+          <input type="text" id="nit" name="nit" placeholder="900.123.456-7" required>
+        </div>
+        <div>
+          <label for="razonSocial">Nombre / Razón social</label>
+          <input type="text" id="razonSocial" name="razonSocial" placeholder="Ej: Aventura Andina SAS" required>
+        </div>
+        <div>
+          <label for="tipoProveedor">Tipo de servicio turístico</label>
+          <select id="tipoProveedor" name="tipoProveedor" required>
+            <option value="" disabled selected>Selecciona una categoría</option>
+            <option>Hospedaje y alojamiento</option>
+            <option>Transporte turístico</option>
+            <option>Alimentación y restaurantes</option>
+            <option>Guianza y operación turística</option>
+            <option>Actividades y entretenimiento</option>
+            <option>Otro</option>
+          </select>
+        </div>
+        <div>
+          <label for="ciudad">Ciudad / País</label>
+          <input type="text" id="ciudad" name="ciudad" placeholder="Bogotá, Colombia" required>
+        </div>
+        <div class="full">
+          <label for="direccion">Dirección</label>
+          <input type="text" id="direccion" name="direccion" placeholder="Dirección de la empresa">
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Contacto</legend>
+      <div class="grid">
+        <div>
+          <label for="representante">Representante / Persona de contacto</label>
+          <input type="text" id="representante" name="representante" required>
+        </div>
+        <div>
+          <label for="cargo">Cargo <span class="hint">opcional</span></label>
+          <input type="text" id="cargo" name="cargo" placeholder="Gerente comercial">
+        </div>
+        <div>
+          <label for="email">Correo electrónico</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+        <div>
+          <label for="telefono">Teléfono</label>
+          <input type="tel" id="telefono" name="telefono" placeholder="+57 300 000 0000" required>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Documentación general</legend>
+      <div class="grid">
+        <div class="full file-field">
+          <label class="file-btn" for="documentos">📎 Adjuntar documentos</label>
+          <input type="file" id="documentos" name="documentos" multiple>
+          <div class="hint">RUT, Cámara de Comercio, cédula del representante, certificaciones (PDF o imagen)</div>
+          <div class="file-names" id="fileNames"></div>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Cuenta bancaria</legend>
+      <div class="grid">
+        <div>
+          <label for="banco">Banco</label>
+          <input type="text" id="banco" name="banco" required>
+        </div>
+        <div>
+          <label for="titular">Titular de la cuenta</label>
+          <input type="text" id="titular" name="titular" required>
+        </div>
+        <div>
+          <label for="numeroCuenta">Número de cuenta</label>
+          <input type="text" id="numeroCuenta" name="numeroCuenta" required>
+        </div>
+        <div>
+          <label>Tipo de cuenta</label>
+          <div class="radio-row">
+            <label><input type="radio" name="tipoCuenta" value="Ahorros" checked> Ahorros</label>
+            <label><input type="radio" name="tipoCuenta" value="Corriente"> Corriente</label>
+          </div>
+        </div>
+        <div class="full file-field">
+          <label class="file-btn" for="certBancaria">📎 Certificación bancaria</label>
+          <input type="file" id="certBancaria" name="certBancaria">
+          <div class="hint">Documento emitido por el banco (no mayor a 30 días)</div>
+          <div class="file-names" id="fileNamesBanco"></div>
+        </div>
+      </div>
+    </fieldset>
+
+    <label class="terms">
+      <input type="checkbox" required>
+      Declaro que la información suministrada es veraz y autorizo su verificación y tratamiento conforme a la política de datos de la empresa.
+    </label>
+
+  </div>
+
+  <div class="success" id="successBox">
+    ✔ Solicitud recibida. Tu número de radicado es <strong id="successTicket"></strong>. Te contactaremos pronto.
+  </div>
+
+  <div class="footer">
+    <button type="submit">Enviar solicitud</button>
+  </div>
+</form>
+
+<script>
+  // Genera un número random de tiket 
+  const ticketNum = 'PRV-2026-' + String(Math.floor(Math.random()*90000)+10000);
+  document.getElementById('ticketNumber').textContent = ticketNum;
+
+  function listFiles(inputId, targetId){
+    const input = document.getElementById(inputId);
+    const target = document.getElementById(targetId);
+    input.addEventListener('change', () => {
+      const names = Array.from(input.files).map(f => f.name);
+      target.textContent = names.length ? names.join(', ') : '';
+    });
+  }
+  listFiles('documentos','fileNames');
+  listFiles('certBancaria','fileNamesBanco');
+
+  document.getElementById('vendorForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    document.getElementById('successTicket').textContent = ticketNum;
+    document.getElementById('successBox').style.display = 'block';
+    document.getElementById('successBox').scrollIntoView({behavior:'smooth', block:'center'});
+  });
+</script>
+
+</body>
+</html>
